@@ -6,6 +6,7 @@ namespace HashTable
 {
     public class Nativedictionary
     {
+        private int Step;
         public List<object> KeyArray;
         public List<object> ValueArray;
 
