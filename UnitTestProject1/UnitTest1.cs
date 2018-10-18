@@ -49,9 +49,9 @@ namespace UnitTestProject1
             else Assert.AreEqual(-1, table.Find("abc"));
         }
 
-        public HashTable.HashTable GenerateTable()
+        public HashTable.Nativedictionary GenerateTable()
         {
-            var table = new HashTable.HashTable();
+            var table = new HashTable.Nativedictionary();
             table.Put("a");
             table.Put("b");
             table.Put("c");

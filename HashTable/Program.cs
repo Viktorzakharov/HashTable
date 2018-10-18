@@ -6,7 +6,7 @@ namespace HashTable
     {
         static void Main()
         {
-            var table = new HashTable();
+            var table = new Nativedictionary();
 
             table.Put("a");
             table.Put("b");
