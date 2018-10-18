@@ -25,18 +25,28 @@ namespace UnitTestProject1
         public void TestPut()
         {
             var table = GenerateTable();
-            table.Put("abc");
-            Assert.AreEqual("abc", table.Array[294 % table.Size]);
+            var slot = table.SeekSlot("abc", null);
+            var result = table.Put("abc");
+            if (slot < 0) Assert.IsFalse(result);
+            else
+            {
+                Assert.IsTrue(result);
+                Assert.AreEqual("abc", table.Array[slot]);
+            }
         }
 
         [TestMethod]
         public void TestFind()
         {
             var table = GenerateTable();
-            table.Put("abc");
-            var result = table.Find("abc");
-            Assert.AreEqual(294 % table.Size, result);
-            Assert.AreEqual("abc", table.Array[result]);
+            if (table.Put("abc"))
+            {
+                var slot = table.SeekSlot("abc", "abc");
+                var result = table.Find("abc");
+                Assert.AreEqual(slot, result);
+                Assert.AreEqual("abc", table.Array[result]);
+            }
+            else Assert.AreEqual(-1, table.Find("abc"));
         }
 
         public HashTable.HashTable GenerateTable()

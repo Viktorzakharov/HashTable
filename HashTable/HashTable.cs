@@ -19,7 +19,7 @@ namespace HashTable
         public int HashFun(string value)
         {
             var result = 0;
-            byte[] text= Encoding.UTF8.GetBytes(value);
+            byte[] text = Encoding.UTF8.GetBytes(value);
             for (int i = 0; i < text.Length; i++)
                 result += text[i];
             return result % 17;
@@ -36,17 +36,18 @@ namespace HashTable
             return -1;
         }
 
-        public void Put(string value)
+        public bool Put(string value)
         {
-            var slot= SeekSlot(value, null);
-            if (slot < 0) Console.WriteLine("Full table!");
-            else Array[slot] = value;
+            var slot = SeekSlot(value, null);
+            if (slot < 0) return false;
+            Array[slot] = value;
+            return true;
         }
 
         public int Find(string value)
         {
             var result = SeekSlot(value, value);
-            if (result < 0) Console.WriteLine("Value not found!");
+            if (result < 0) return -1;
             return result;
         }
     }
