@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using HashTable;
 
 namespace UnitTestProject1
 {
@@ -6,62 +7,45 @@ namespace UnitTestProject1
     public class UnitTest1
     {
         [TestMethod]
-        public void TestHashFun()
+        public void TestIsKey()
         {
             var table = GenerateTable();
-            var result = table.HashFun("abc");
-            Assert.AreEqual(294 % table.Size, result);
-        }
-
-        [TestMethod]
-        public void TestSeekSlot()
-        {
-            var table = GenerateTable();
-            var result = table.SeekSlot("abc", null);
-            Assert.IsNull(table.Array[result]);
+            Assert.AreEqual(1, table.IsKey("f")[0]);
+            Assert.AreEqual(-1, table.IsKey("abcd")[0]);
         }
 
         [TestMethod]
         public void TestPut()
         {
             var table = GenerateTable();
-            var slot = table.SeekSlot("abc", null);
-            var result = table.Put("abc");
-            if (slot < 0) Assert.IsFalse(result);
-            else
-            {
-                Assert.IsTrue(result);
-                Assert.AreEqual("abc", table.Array[slot]);
-            }
+            Assert.IsTrue(table.Put("k", "kk"));
+            Assert.AreEqual("kk", table.Get("k"));
+            Assert.IsTrue(table.Put("c", "test"));
+            Assert.AreEqual("test", table.Get("c"));
+
         }
 
         [TestMethod]
-        public void TestFind()
+        public void TestGet()
         {
             var table = GenerateTable();
-            if (table.Put("abc"))
-            {
-                var slot = table.SeekSlot("abc", "abc");
-                var result = table.Find("abc");
-                Assert.AreEqual(slot, result);
-                Assert.AreEqual("abc", table.Array[result]);
-            }
-            else Assert.AreEqual(-1, table.Find("abc"));
+            Assert.AreEqual("bb", table.Get("b"));
+            Assert.AreEqual(null, table.Get("z"));
         }
 
-        public HashTable.Nativedictionary GenerateTable()
+        public NativeDictionary GenerateTable()
         {
-            var table = new HashTable.Nativedictionary();
-            table.Put("a");
-            table.Put("b");
-            table.Put("c");
-            table.Put("d");
-            table.Put("e");
-            table.Put("f");
-            table.Put("g");
-            table.Put("h");
-            table.Put("i");
-            table.Put("j");
+            var table = new NativeDictionary();
+            table.Put("a", "aa");
+            table.Put("b", "bb");
+            table.Put("c", "cc");
+            table.Put("d", "dd");
+            table.Put("e", "ee");
+            table.Put("f", "ff");
+            table.Put("g", "gg");
+            table.Put("h", "hh");
+            table.Put("i", "ii");
+            table.Put("j", "jj");
             return table;
         }
     }

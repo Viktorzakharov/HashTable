@@ -6,24 +6,31 @@ namespace HashTable
     {
         static void Main()
         {
-            var table = new Nativedictionary();
+            var table = GenerateTable();
 
-            table.Put("a");
-            table.Put("b");
-            table.Put("c");
-            table.Put("d");
-            table.Put("e");
-            table.Put("f");
-            table.Put("g");
-            table.Put("h");
-            table.Put("i");
-            table.Put("j");
-
-            for (int i = 0; i < table.Array.Length; i++)
-                Console.Write(table.Array[i] + " ");
+            for (int i = 0; i < table.KeyArray.Length; i++)
+                Console.Write(table.KeyArray[i] + " ");
             Console.WriteLine();
 
-            Console.WriteLine(table.Find("i"));
+            for (int i = 0; i < table.ValueArray.Length; i++)
+                Console.Write(table.ValueArray[i] + " ");
+
+        }
+
+        public static NativeDictionary GenerateTable()
+        {
+            var table = new NativeDictionary();
+            table.Put("a", "aa");
+            table.Put("b", "bb");
+            table.Put("c", "cc");
+            table.Put("d", "dd");
+            table.Put("e", "ee");
+            table.Put("f", "ff");
+            table.Put("g", "gg");
+            table.Put("h", "hh");
+            table.Put("i", "ii");
+            table.Put("j", "jj");
+            return table;
         }
     }
 }
