@@ -25,12 +25,13 @@ namespace HashTable
             return result % 17;
         }
 
-        public int SeekSlot(string value, string param)
+        public int SeekSlot(string value)
         {
             var slot = HashFun(value);
             for (int i = 0; i < Size; i++)
             {
-                if (Array[slot % Size] == param) return slot % Size;
+                if (Array[slot % Size] == value) return -1;
+                if (Array[slot % Size] == null) return slot % Size;
                 slot += Step;
             }
             return -1;
@@ -38,7 +39,7 @@ namespace HashTable
 
         public bool Put(string value)
         {
-            var slot = SeekSlot(value, null);
+            var slot = SeekSlot(value);
             if (slot < 0) return false;
             Array[slot] = value;
             return true;
@@ -46,7 +47,7 @@ namespace HashTable
 
         public int Find(string value)
         {
-            var result = SeekSlot(value, value);
+            var result = SeekSlot(value);
             if (result < 0) return -1;
             return result;
         }
