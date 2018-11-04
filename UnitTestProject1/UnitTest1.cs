@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace UnitTestProject1
 {
@@ -6,47 +7,46 @@ namespace UnitTestProject1
     public class UnitTest1
     {
         [TestMethod]
-        public void TestHashFun()
+        public void TestPutRemove()
         {
             var table = GenerateTable();
-            var result = table.HashFun("abc");
-            Assert.AreEqual(294 % table.Size, result);
+            Assert.IsTrue(table.Put("f"));
+            Assert.IsFalse(table.Put("f"));
+            Assert.IsTrue(table.Remove("f"));
+            Assert.IsFalse(table.Remove("f"));
         }
 
         [TestMethod]
-        public void TestSeekSlot()
+        public void TestSetActions()
         {
             var table = GenerateTable();
-            var result = table.SeekSlot("abc", null);
-            Assert.IsNull(table.Array[result]);
-        }
+            var checkTable = GenerateTestTable();
 
-        [TestMethod]
-        public void TestPut()
-        {
-            var table = GenerateTable();
-            var slot = table.SeekSlot("abc", null);
-            var result = table.Put("abc");
-            if (slot < 0) Assert.IsFalse(result);
-            else
-            {
-                Assert.IsTrue(result);
-                Assert.AreEqual("abc", table.Array[slot]);
-            }
-        }
+            var intersection = new string[] { "b", "d" };
+            var intersectionResult = table.Intersection(checkTable[0]);
+            Assert.IsTrue(CheckSet(intersection, intersectionResult));
+            Assert.AreEqual(0, table.Intersection(checkTable[3]).Count);
 
-        [TestMethod]
-        public void TestFind()
+            var union = new string[] { "f", "b", "g", "d", "a", "c", "e" };
+            var unionResult = table.Union(checkTable[0]);
+            Assert.IsTrue(CheckSet(union, unionResult));
+            Assert.IsTrue(CheckSet(table.Array, table.Union(new HashTable.HashTable())));
+
+            var difference = new string[] { "a", "c", "e"};
+            var differenceResult = table.Union(checkTable[0]);
+            Assert.IsTrue(CheckSet(difference, differenceResult));
+            Assert.AreEqual(0, table.Difference(checkTable[2]).Count);
+
+            Assert.IsTrue(table.Issubset(checkTable[1]));
+            Assert.IsFalse(table.Issubset(checkTable[2]));
+            Assert.IsFalse(table.Issubset(checkTable[0]));
+        }       
+
+        public bool CheckSet(string[] expected, List<string> actual)
         {
-            var table = GenerateTable();
-            if (table.Put("abc"))
-            {
-                var slot = table.SeekSlot("abc", "abc");
-                var result = table.Find("abc");
-                Assert.AreEqual(slot, result);
-                Assert.AreEqual("abc", table.Array[result]);
-            }
-            else Assert.AreEqual(-1, table.Find("abc"));
+            for (int i = 0; i < actual.Count; i++)
+                if (expected[i] != actual[i]) return false;
+            return true;
         }
 
         public HashTable.HashTable GenerateTable()
@@ -57,12 +57,35 @@ namespace UnitTestProject1
             table.Put("c");
             table.Put("d");
             table.Put("e");
-            table.Put("f");
-            table.Put("g");
-            table.Put("h");
-            table.Put("i");
-            table.Put("j");
             return table;
+        }
+
+        public HashTable.HashTable[] GenerateTestTable()
+        {
+            var tableArray = new HashTable.HashTable[4];
+
+            tableArray[0].Put("f");
+            tableArray[0].Put("b");
+            tableArray[0].Put("g");
+            tableArray[0].Put("d");
+
+            tableArray[1].Put("b");
+            tableArray[1].Put("c");
+            tableArray[1].Put("d");
+
+            tableArray[2].Put("a");
+            tableArray[2].Put("b");
+            tableArray[2].Put("c");
+            tableArray[2].Put("d");
+            tableArray[2].Put("e");
+            tableArray[2].Put("f");
+            tableArray[2].Put("g");
+
+            tableArray[3].Put("x");
+            tableArray[3].Put("y");
+            tableArray[3].Put("z");
+
+            return tableArray;
         }
     }
 }
