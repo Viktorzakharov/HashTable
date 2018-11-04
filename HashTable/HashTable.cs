@@ -20,8 +20,8 @@ namespace HashTable
         {
             var result = 0;
             byte[] text = Encoding.UTF8.GetBytes(value);
-            for (int i = 0; i < text.Length; i++)
-                result += text[i];
+            foreach(var e in text)
+                result += e;
             return result % 17;
         }
 
@@ -60,16 +60,16 @@ namespace HashTable
             return true;
         }
 
-        public List<string> Intersection(HashTable getSet)
+        public string[] Intersection(HashTable getSet)
         {
             var result = new List<string>();
             foreach (var e in Array)
                 if (e != null)
                     if (getSet.Find(e)) result.Add(e);
-            return result;
+            return result.ToArray();
         }
 
-        public List<string> Union(HashTable getSet)
+        public string[] Union(HashTable getSet)
         {
             var result = new List<string>();
             foreach (var e in getSet.Array)
@@ -78,16 +78,16 @@ namespace HashTable
             foreach (var e in Array)
                 if (e != null)
                     if (!getSet.Find(e)) result.Add(e);
-            return result;
+            return result.ToArray();
         }
 
-        public List<string> Difference(HashTable getSet)
+        public string[] Difference(HashTable getSet)
         {
             var result = new List<string>();
             foreach (var e in Array)
                 if (e != null)
                     if (!getSet.Find(e)) result.Add(e);
-            return result;
+            return result.ToArray();
         }
 
         public bool Issubset(HashTable getSet)
