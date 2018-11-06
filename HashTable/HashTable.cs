@@ -8,6 +8,7 @@ namespace HashTable
         private int Step;
         public object[] KeyArray;
         public object[] ValueArray;
+        public int[] Count;
 
         public NativeDictionary()
         {
@@ -15,6 +16,7 @@ namespace HashTable
             Step = 3;
             KeyArray = new object[Size];
             ValueArray = new object[Size];
+            Count = new int[Size];
         }
 
         public int HashFun(string value)
