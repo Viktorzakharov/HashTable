@@ -10,6 +10,9 @@ namespace HashTable
         public object[] ValueArray;
         public int[] Appeals;
         public Database Data;
+        public readonly int AppealValueStart;
+        public readonly int AppealValueGet;
+
 
         public Cache()
         {
@@ -20,6 +23,8 @@ namespace HashTable
             Appeals = new int[Size];
             Data = new Database();
             Data.Create();
+            AppealValueStart = 8;
+            AppealValueGet = 18;
         }
 
         public int HashFun(object value)
@@ -28,7 +33,7 @@ namespace HashTable
             byte[] text = Encoding.UTF8.GetBytes(value.ToString());
             for (int i = 0; i < text.Length; i++)
                 result += text[i];
-            return result % 17;
+            return result % Size;
         }
 
         public int[] IsKey(object key)
@@ -53,22 +58,22 @@ namespace HashTable
                 return ValueArray[slot[1]];
             }
             if (slot[0] == -1)
-            { 
+            {
                 PutKeyValue(slot[1], key);
-                Appeals[slot[1]] = 8;
-                return ValueArray[slot[1]];                
+                Appeals[slot[1]] = AppealValueStart;
+                return ValueArray[slot[1]];
             }
             PutKeyValue(slot[1], key);
-            Appeals[slot[1]] = 8;
+            Appeals[slot[1]] = AppealValueStart;
             return ValueArray[slot[1]];
         }
 
         public void AppealsManage(int slot)
         {
-            Appeals[slot] += 18;
+            Appeals[slot] += AppealValueGet;
             for (int i = 0; i < Appeals.Length; i++)
                 if (KeyArray[i] != null)
-                    Appeals[i] --;
+                    Appeals[i]--;
         }
 
         public int MinIndex()

@@ -13,7 +13,7 @@ namespace UnitTestProject1
             Program.GenerateCache(cache);
             var lastAppeal = cache.Appeals[0];
             cache.GetValue(cache.KeyArray[0]);
-            Assert.AreEqual(lastAppeal + 17, cache.Appeals[0]);          
+            Assert.AreEqual(lastAppeal + cache.AppealValueGet - 1, cache.Appeals[0]);
         }
 
         [TestMethod]

@@ -11,8 +11,9 @@ namespace HashTable
         public void Create()
         {
             var symbol = "0";
+            var dataLength = 81;
 
-            for (int i = 0; i < 81; i++)
+            for (int i = 0; i < dataLength; i++)
             {
                 Data.Add(symbol, symbol + symbol);
                 var symbolByte = Encoding.UTF8.GetBytes(symbol);
