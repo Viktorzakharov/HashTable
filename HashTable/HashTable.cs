@@ -2,27 +2,30 @@
 
 namespace HashTable
 {
-    public class NativeDictionary
+    public class Cache
     {
         public readonly int Size;
-        private int Step;
+        public readonly int Step;
         public object[] KeyArray;
         public object[] ValueArray;
-        public int[] Count;
+        public int[] Appeals;
+        public Database Data;
 
-        public NativeDictionary()
+        public Cache()
         {
             Size = 17;
             Step = 3;
             KeyArray = new object[Size];
             ValueArray = new object[Size];
-            Count = new int[Size];
+            Appeals = new int[Size];
+            Data = new Database();
+            Data.Create();
         }
 
-        public int HashFun(string value)
+        public int HashFun(object value)
         {
             var result = 0;
-            byte[] text = Encoding.UTF8.GetBytes(value);
+            byte[] text = Encoding.UTF8.GetBytes(value.ToString());
             for (int i = 0; i < text.Length; i++)
                 result += text[i];
             return result % 17;
@@ -30,31 +33,63 @@ namespace HashTable
 
         public int[] IsKey(object key)
         {
-            var slot = HashFun(key.ToString());
+            var slot = HashFun(key);
             for (int i = 0; i < Size; i++)
             {
                 var item = KeyArray[slot % Size];
-                if (item == key) return new int[] { 1, slot % Size };
-                if (item == null) return new int[] { -1, slot % Size };
+                if (key.Equals(item)) return new int[] { 1, slot % Size };
+                if (item is null) return new int[] { 0, slot % Size };
                 slot += Step;
             }
-            return new int[] { -1, -1 };
+            return new int[] { -1, MinIndex() };
         }
 
-        public bool Put(object key, object value)
+        public object GetValue(object key)
         {
             var slot = IsKey(key);
-            if (slot[0] < 0 && slot[1] < 0) return false;
-            KeyArray[slot[1]] = key;
-            ValueArray[slot[1]] = value;
-            return true;
-        }
-
-        public object Get(object key)
-        {
-            var slot = IsKey(key);
-            if (slot[0] < 0) return null;
+            if (slot[0] == 1)
+            {
+                AppealsManage(slot[1]);
+                return ValueArray[slot[1]];
+            }
+            if (slot[0] == -1)
+            { 
+                PutKeyValue(slot[1], key);
+                Appeals[slot[1]] = 8;
+                return ValueArray[slot[1]];                
+            }
+            PutKeyValue(slot[1], key);
+            Appeals[slot[1]] = 8;
             return ValueArray[slot[1]];
+        }
+
+        public void AppealsManage(int slot)
+        {
+            Appeals[slot] += 18;
+            for (int i = 0; i < Appeals.Length; i++)
+                if (KeyArray[i] != null)
+                    Appeals[i] --;
+        }
+
+        public int MinIndex()
+        {
+            var min = Appeals[0];
+            var minIndex = 0;
+
+            for (int i = 0; i < Appeals.Length; i++)
+                if (min > Appeals[i])
+                {
+                    min = Appeals[i];
+                    minIndex = i;
+                }
+            return minIndex;
+        }
+
+        public void PutKeyValue(int index, object key)
+        {
+            KeyArray[index] = key;
+            ValueArray[index] = Data.Data[key];
+            AppealsManage(index);
         }
     }
 }

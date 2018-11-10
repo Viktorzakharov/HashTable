@@ -7,46 +7,33 @@ namespace UnitTestProject1
     public class UnitTest1
     {
         [TestMethod]
-        public void TestIsKey()
+        public void TestAppealsIncrease()
         {
-            var table = GenerateTable();
-            Assert.AreEqual(1, table.IsKey("f")[0]);
-            Assert.AreEqual(-1, table.IsKey("abcd")[0]);
+            var cache = new Cache();
+            Program.GenerateCache(cache);
+            var lastAppeal = cache.Appeals[0];
+            cache.GetValue(cache.KeyArray[0]);
+            Assert.AreEqual(lastAppeal + 17, cache.Appeals[0]);          
         }
 
         [TestMethod]
-        public void TestPut()
+        public void TestGetValue()
         {
-            var table = GenerateTable();
-            Assert.IsTrue(table.Put("k", "kk"));
-            Assert.AreEqual("kk", table.Get("k"));
-            Assert.IsTrue(table.Put("c", "test"));
-            Assert.AreEqual("test", table.Get("c"));
-
+            var cache = new Cache();
+            var random = Program.GenerateCache(cache);
+            var newKey = Program.NewKey(cache, random);
+            var minIndex = cache.MinIndex();
+            var lastKey = cache.KeyArray[minIndex];
+            cache.GetValue(newKey);
+            Assert.IsFalse(Find(cache, lastKey));
+            Assert.IsTrue(newKey.Equals(cache.KeyArray[minIndex]));
         }
 
-        [TestMethod]
-        public void TestGet()
+        public static bool Find(Cache cache, object key)
         {
-            var table = GenerateTable();
-            Assert.AreEqual("bb", table.Get("b"));
-            Assert.AreEqual(null, table.Get("z"));
-        }
-
-        public NativeDictionary GenerateTable()
-        {
-            var table = new NativeDictionary();
-            table.Put("a", "aa");
-            table.Put("b", "bb");
-            table.Put("c", "cc");
-            table.Put("d", "dd");
-            table.Put("e", "ee");
-            table.Put("f", "ff");
-            table.Put("g", "gg");
-            table.Put("h", "hh");
-            table.Put("i", "ii");
-            table.Put("j", "jj");
-            return table;
+            foreach (var e in cache.KeyArray)
+                if (key.Equals(e)) return true;
+            return false;
         }
     }
 }

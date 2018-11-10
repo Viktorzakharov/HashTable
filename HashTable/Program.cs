@@ -1,36 +1,68 @@
 ﻿using System;
+using System.Text;
 
 namespace HashTable
 {
-    class Program
+    public class Program
     {
         static void Main()
         {
-            var table = GenerateTable();
+            var cache = new Cache();
+            var random = GenerateCache(cache);
+            var newKey = NewKey(cache, random);
 
-            for (int i = 0; i < table.KeyArray.Length; i++)
-                Console.Write(table.KeyArray[i] + " ");
-            Console.WriteLine();
+            Console.WriteLine("Before");
+            Write(cache.KeyArray);
+            Write(cache.ValueArray);
+            Write(cache.Appeals);
 
-            for (int i = 0; i < table.ValueArray.Length; i++)
-                Console.Write(table.ValueArray[i] + " ");
+            cache.GetValue(newKey);
 
+            Console.WriteLine("After");
+            Write(cache.KeyArray);
+            Write(cache.ValueArray);
+            Write(cache.Appeals);
         }
 
-        public static NativeDictionary GenerateTable()
+        public static Random GenerateCache(Cache cache)
         {
-            var table = new NativeDictionary();
-            table.Put("a", "aa");
-            table.Put("b", "bb");
-            table.Put("c", "cc");
-            table.Put("d", "dd");
-            table.Put("e", "ee");
-            table.Put("f", "ff");
-            table.Put("g", "gg");
-            table.Put("h", "hh");
-            table.Put("i", "ii");
-            table.Put("j", "jj");
-            return table;
+            var random = new Random();
+
+            for (int i = 0; i < 80; i++)
+                cache.GetValue(Encoding.UTF8.GetString(new byte[] { (byte)random.Next(48, 128) }));
+            return random;
+        }
+
+        public static bool CheckKey(string key, Cache cache)
+        {
+            foreach (var e in cache.KeyArray)
+                if ((string)e == key)
+                    return false;
+            return true;
+        }
+
+        public static string NewKey(Cache cache, Random random)
+        {
+            var newKey = Encoding.UTF8.GetString(new byte[] { (byte)random.Next(48, 128) });
+            while (true)
+            {
+                if (CheckKey(newKey, cache)) break;
+                newKey = Encoding.UTF8.GetString(new byte[] { (byte)random.Next(48, 128) });
+            }
+            return newKey;
+        }
+
+        public static void Write(object array)
+        {
+            if (array is object[])
+                foreach (var e in (object[])array)
+                    Console.Write("{0,3}", e);
+            else if(array is int[])
+                foreach (var e in (int[])array)
+                    Console.Write("{0,3}", e);
+            Console.WriteLine();
         }
     }
+
+
 }
