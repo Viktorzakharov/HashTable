@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AlgorithmsDataStructures;
 
 namespace UnitTestProject1
 {
@@ -10,28 +11,28 @@ namespace UnitTestProject1
         {
             var table = GenerateTable();
             var result = table.HashFun("abc");
-            Assert.AreEqual(294 % table.Size, result);
+            Assert.AreEqual(294 % table.size, result);
         }
 
         [TestMethod]
         public void TestSeekSlot()
         {
             var table = GenerateTable();
-            var result = table.SeekSlot("abc", null);
-            Assert.IsNull(table.Array[result]);
+            var result = table.SeekSlot("abc");
+            Assert.IsNull(table.slots[result]);
         }
 
         [TestMethod]
         public void TestPut()
         {
             var table = GenerateTable();
-            var slot = table.SeekSlot("abc", null);
+            var slot = table.SeekSlot("abc");
             var result = table.Put("abc");
-            if (slot < 0) Assert.IsFalse(result);
+            if (slot < 0) Assert.AreEqual(-1, result);
             else
             {
-                Assert.IsTrue(result);
-                Assert.AreEqual("abc", table.Array[slot]);
+                Assert.AreEqual(slot, result);
+                Assert.AreEqual("abc", table.slots[slot]);
             }
         }
 
@@ -39,19 +40,19 @@ namespace UnitTestProject1
         public void TestFind()
         {
             var table = GenerateTable();
-            if (table.Put("abc"))
+            if (table.Put("abc") != -1)
             {
-                var slot = table.SeekSlot("abc", "abc");
+                var slot = table.FindSlot("abc", "abc");
                 var result = table.Find("abc");
                 Assert.AreEqual(slot, result);
-                Assert.AreEqual("abc", table.Array[result]);
+                Assert.AreEqual("abc", table.slots[result]);
             }
             else Assert.AreEqual(-1, table.Find("abc"));
         }
 
-        public HashTable.HashTable GenerateTable()
+        public HashTable GenerateTable()
         {
-            var table = new HashTable.HashTable();
+            var table = new HashTable(17, 3);
             table.Put("a");
             table.Put("b");
             table.Put("c");

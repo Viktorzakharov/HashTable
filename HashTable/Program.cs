@@ -1,29 +1,27 @@
 ﻿using System;
 
-namespace HashTable
+namespace AlgorithmsDataStructures
 {
     class Program
     {
         static void Main()
         {
-            var table = new HashTable();
-
+            var table = new HashTable(17, 3);
             table.Put("a");
             table.Put("b");
             table.Put("c");
+            table.Put("c");
             table.Put("d");
             table.Put("e");
-            table.Put("f");
-            table.Put("g");
-            table.Put("h");
-            table.Put("i");
-            table.Put("j");
+            Write(table.slots);
+            Console.WriteLine(table.Find("c"));
+        }
 
-            for (int i = 0; i < table.Array.Length; i++)
-                Console.Write(table.Array[i] + " ");
+        public static void Write(string[] array)
+        {
+            foreach (var e in array)
+                Console.Write(e + " ");
             Console.WriteLine();
-
-            Console.WriteLine(table.Find("i"));
         }
     }
 }

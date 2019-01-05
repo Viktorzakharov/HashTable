@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
-namespace HashTable
+namespace AlgorithmsDataStructures
 {
     public class HashTable
     {
-        public readonly int Size;
-        private int Step;
-        public string[] Array;
+        public int size;
+        private int step;
+        public string[] slots;
 
-        public HashTable()
+        public HashTable(int sz, int stp)
         {
-            Size = 17;
-            Step = 3;
-            Array = new string[Size];
+            size = sz;
+            step = stp;
+            slots = new string[size];
         }
 
         public int HashFun(string value)
@@ -22,33 +23,38 @@ namespace HashTable
             byte[] text = Encoding.UTF8.GetBytes(value);
             for (int i = 0; i < text.Length; i++)
                 result += text[i];
-            return result % 17;
+            return result % size;
         }
 
-        public int SeekSlot(string value, string param)
+        public int SeekSlot(string value)
         {
-            var slot = HashFun(value);
-            for (int i = 0; i < Size; i++)
-            {
-                if (Array[slot % Size] == param) return slot % Size;
-                slot += Step;
-            }
-            return -1;
+            return FindSlot(value, null);
         }
 
-        public bool Put(string value)
+        public int Put(string value)
         {
-            var slot = SeekSlot(value, null);
-            if (slot < 0) return false;
-            Array[slot] = value;
-            return true;
+            var slot = SeekSlot(value);
+            if (slot < 0) return -1;
+            slots[slot] = value;
+            return slot;
         }
 
         public int Find(string value)
         {
-            var result = SeekSlot(value, value);
-            if (result < 0) return -1;
+            var result = FindSlot(value, value);
+            if (result < 0 || slots[result] == null) return -1;
             return result;
+        }
+
+        public int FindSlot(string value, string param)
+        {
+            var slot = HashFun(value);
+            for (int i = 0; i < size; i++)
+            {
+                if (slots[slot % size] == param || slots[slot % size] == null) return slot % size;
+                slot += step;
+            }
+            return -1;
         }
     }
 }
