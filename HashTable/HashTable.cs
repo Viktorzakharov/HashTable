@@ -4,26 +4,26 @@ using System.Text;
 
 namespace AlgorithmsDataStructures
 {
+    public delegate int HashFunction(string line, int size);
+
     public class HashTable
     {
         public int size;
         private int step;
         public string[] slots;
+        public HashFunction func;
 
-        public HashTable(int sz, int stp)
+        public HashTable(int sz, int stp, HashFunction[] functions)
         {
             size = sz;
             step = stp;
             slots = new string[size];
+            func = functions[new Random(DateTime.Now.Millisecond).Next() % functions.Length];
         }
 
         public int HashFun(string value)
         {
-            var result = 0;
-            byte[] text = Encoding.UTF8.GetBytes(value);
-            for (int i = 0; i < text.Length; i++)
-                result += text[i];
-            return result % size;
+            return func(value, size);
         }
 
         public int SeekSlot(string value)
@@ -55,6 +55,15 @@ namespace AlgorithmsDataStructures
                 slot += step;
             }
             return -1;
+        }
+
+        public static int LineInByte(string value)
+        {
+            var result = 0;
+            byte[] text = Encoding.UTF8.GetBytes(value);
+            for (int i = 0; i < text.Length; i++)
+                result += text[i];
+            return result;
         }
     }
 }

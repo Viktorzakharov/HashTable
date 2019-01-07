@@ -6,15 +6,12 @@ namespace AlgorithmsDataStructures
     {
         static void Main()
         {
-            var table = new HashTable(17, 3);
-            table.Put("a");
-            table.Put("b");
-            table.Put("c");
-            table.Put("c");
-            table.Put("d");
-            table.Put("e");
-            Write(table.slots);
-            Console.WriteLine(table.Find("c"));
+            var array = new HashFunction[]
+            { (line, size) => (10 * HashTable.LineInByte(line) + 1) % 100 % size,
+              (line, size) => (10 * HashTable.LineInByte(line) + 1) % 100 % size,
+              (line, size) => (10 * HashTable.LineInByte(line) + 1) % 100 % size
+            };
+            var table = new HashTable(17, 3, array);
         }
 
         public static void Write(string[] array)

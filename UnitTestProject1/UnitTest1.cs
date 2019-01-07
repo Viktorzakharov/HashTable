@@ -11,7 +11,7 @@ namespace UnitTestProject1
         {
             var table = GenerateTable();
             var result = table.HashFun("abc");
-            Assert.AreEqual(294 % table.size, result);
+            Assert.AreEqual(table.func("abc", table.size), result);
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace UnitTestProject1
 
         public HashTable GenerateTable()
         {
-            var table = new HashTable(17, 3);
+            var table = new HashTable(17, 3, GenerateFunctions());
             table.Put("a");
             table.Put("b");
             table.Put("c");
@@ -64,6 +64,17 @@ namespace UnitTestProject1
             table.Put("i");
             table.Put("j");
             return table;
+        }
+
+        public HashFunction[] GenerateFunctions()
+        {
+            return new HashFunction[]
+            { (line, size) => (5 * HashTable.LineInByte(line) + 7) % 28 % size,
+              (line, size) => (10 * HashTable.LineInByte(line) + 2) % 50 % size,
+              (line, size) => (17 * HashTable.LineInByte(line) + 3) % 100 % size,
+              (line, size) => (23 * HashTable.LineInByte(line) + 245) % 284 % size,
+              (line, size) => (115 * HashTable.LineInByte(line) + 54) % 176 % size
+            };
         }
     }
 }
