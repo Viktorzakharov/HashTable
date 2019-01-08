@@ -1,25 +1,20 @@
 ﻿using System;
 
-namespace HashTable
+namespace AlgorithmsDataStructures
 {
     class Program
     {
         static void Main()
         {
             var table = GenerateTable();
-
-            for (int i = 0; i < table.KeyArray.Length; i++)
-                Console.Write(table.KeyArray[i] + " ");
+            for (int i = 0; i < table.size; i++)
+                Console.WriteLine("{0}\t{1}", table.slots[i], table.values[i]);
             Console.WriteLine();
-
-            for (int i = 0; i < table.ValueArray.Length; i++)
-                Console.Write(table.ValueArray[i] + " ");
-
         }
 
-        public static NativeDictionary GenerateTable()
+        public static NativeDictionary<string> GenerateTable()
         {
-            var table = new NativeDictionary();
+            var table = new NativeDictionary<string>(17);
             table.Put("a", "aa");
             table.Put("b", "bb");
             table.Put("c", "cc");

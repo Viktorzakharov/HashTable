@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HashTable;
+using AlgorithmsDataStructures;
 
 namespace UnitTestProject1
 {
@@ -10,32 +10,48 @@ namespace UnitTestProject1
         public void TestIsKey()
         {
             var table = GenerateTable();
-            Assert.AreEqual(1, table.IsKey("f")[0]);
-            Assert.AreEqual(-1, table.IsKey("abcd")[0]);
+            Assert.IsTrue(table.IsKey("g"));
+            Assert.IsFalse(table.IsKey("z"));
         }
 
         [TestMethod]
         public void TestPut()
         {
             var table = GenerateTable();
-            Assert.IsTrue(table.Put("k", "kk"));
-            Assert.AreEqual("kk", table.Get("k"));
-            Assert.IsTrue(table.Put("c", "test"));
-            Assert.AreEqual("test", table.Get("c"));
+            var key = "k";
+            var value = "kk";
+            var slot = table.FindSlot(key);
+            table.Put(key, value);
+            Assert.IsTrue(table.IsKey(key));
+            Assert.AreEqual(key, table.slots[slot]);
+            Assert.AreEqual(value, table.values[slot]);
+            Assert.AreEqual(value, table.Get(key));
 
+            value = "zz";
+            table.Put(key, value);
+            Assert.IsTrue(table.IsKey(key));
+            Assert.AreEqual(key, table.slots[slot]);
+            Assert.AreEqual(value, table.values[slot]);
+            Assert.AreEqual(value, table.Get(key));
         }
 
         [TestMethod]
         public void TestGet()
         {
             var table = GenerateTable();
-            Assert.AreEqual("bb", table.Get("b"));
-            Assert.AreEqual(null, table.Get("z"));
+            var key = "k";
+            Assert.IsFalse(table.IsKey(key));
+            Assert.AreEqual(default(string), table.Get(key));
+
+            key = "h";
+            var value = "hh";
+            Assert.IsTrue(table.IsKey(key));
+            Assert.AreEqual(value, table.Get(key));
         }
 
-        public NativeDictionary GenerateTable()
+        NativeDictionary<string> GenerateTable()
         {
-            var table = new NativeDictionary();
+            var table = new NativeDictionary<string>(17);
             table.Put("a", "aa");
             table.Put("b", "bb");
             table.Put("c", "cc");

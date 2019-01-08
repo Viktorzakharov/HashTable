@@ -1,58 +1,73 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace HashTable
+namespace AlgorithmsDataStructures
 {
-    public class NativeDictionary
+    public class NativeDictionary<T>
     {
-        public readonly int Size;
-        private int Step;
-        public object[] KeyArray;
-        public object[] ValueArray;
+        public int size;
+        private int step;
+        public string[] slots;
+        public T[] values;
 
-        public NativeDictionary()
+        public NativeDictionary(int sz)
         {
-            Size = 17;
-            Step = 3;
-            KeyArray = new object[Size];
-            ValueArray = new object[Size];
+            size = sz;
+            step = 3;
+            if (sz < 4) step = 1;
+            slots = new string[size];
+            values = new T[size];
         }
 
-        public int HashFun(string value)
+        public int HashFun(string key)
         {
             var result = 0;
-            byte[] text = Encoding.UTF8.GetBytes(value);
+            byte[] text = Encoding.UTF8.GetBytes(key);
             for (int i = 0; i < text.Length; i++)
                 result += text[i];
-            return result % 17;
+            return result % size;
         }
 
-        public int[] IsKey(object key)
+        public bool IsKey(string key)
         {
-            var slot = HashFun(key.ToString());
-            for (int i = 0; i < Size; i++)
+            var slot = HashFun(key);
+            for (int i = 0; i < size; i++)
             {
-                var item = KeyArray[slot % Size];
-                if (item == key) return new int[] { 1, slot % Size };
-                if (item == null) return new int[] { -1, slot % Size };
-                slot += Step;
+                var item = slots[slot % size];
+                if (item == key) return true;
+                if (item == null) return false;
+                slot += step;
             }
-            return new int[] { -1, -1 };
+            return false;
         }
 
-        public bool Put(object key, object value)
+        public void Put(string key, T value)
         {
-            var slot = IsKey(key);
-            if (slot[0] < 0 && slot[1] < 0) return false;
-            KeyArray[slot[1]] = key;
-            ValueArray[slot[1]] = value;
-            return true;
+            var slot = FindSlot(key);
+            if (slot == -1) return;
+            if (slots[slot] == null) slots[slot]=key;
+            values[slot] = value;
         }
 
-        public object Get(object key)
+        public T Get(string key)
         {
-            var slot = IsKey(key);
-            if (slot[0] < 0) return null;
-            return ValueArray[slot[1]];
+            var slot = FindSlot(key);
+            if (slot == -1 && slots[slot] == null) return default(T);
+            return values[slot];
+        }
+
+        public int FindSlot(string key)
+        {
+            var slot = HashFun(key);
+            for (int i = 0; i < size; i++)
+            {
+                var item = slots[slot % size];
+                if (item == key) return slot % size;
+                if (item == null) return slot % size;
+                slot += step;
+            }
+            return -1;
         }
     }
 }
