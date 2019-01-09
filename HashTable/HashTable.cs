@@ -1,15 +1,15 @@
 ﻿using System.Text;
 using System.Collections.Generic;
 
-namespace HashTable
+namespace AlgorithmsDataStructures
 {
-    public class HashTable
+    public class PowerSet
     {
         public readonly int Size;
         private int Step;
         public string[] Array;
 
-        public HashTable()
+        public PowerSet()
         {
             Size = 17;
             Step = 3;
@@ -60,7 +60,7 @@ namespace HashTable
             return true;
         }
 
-        public string[] Intersection(HashTable getSet)
+        public string[] Intersection(PowerSet getSet)
         {
             var result = new List<string>();
             foreach (var e in Array)
@@ -69,7 +69,7 @@ namespace HashTable
             return result.ToArray();
         }
 
-        public string[] Union(HashTable getSet)
+        public string[] Union(PowerSet getSet)
         {
             var result = new List<string>();
             foreach (var e in getSet.Array)
@@ -81,7 +81,7 @@ namespace HashTable
             return result.ToArray();
         }
 
-        public string[] Difference(HashTable getSet)
+        public string[] Difference(PowerSet getSet)
         {
             var result = new List<string>();
             foreach (var e in Array)
@@ -90,7 +90,7 @@ namespace HashTable
             return result.ToArray();
         }
 
-        public bool Issubset(HashTable getSet)
+        public bool Issubset(PowerSet getSet)
         {
             foreach (var e in getSet.Array)
                 if (e != null)

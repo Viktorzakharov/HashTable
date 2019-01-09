@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace HashTable
+namespace AlgorithmsDataStructures
 {
     class Program
     {
         static void Main()
         {
-            var table = new HashTable();
+            var table = new PowerSet();
             table.Put("a");
             table.Put("b");
             table.Put("c");
 
-            var checkTable = new HashTable();
+            var checkTable = new PowerSet();
             checkTable.Put("c");
             checkTable.Put("d");
             checkTable.Put("e");

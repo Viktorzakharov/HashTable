@@ -31,7 +31,7 @@ namespace UnitTestProject1
             var union = new string[] { "f", "b", "g", "d", "a", "c", "e" };
             var unionResult = table.Union(checkTable[0]);
             Assert.AreEqual(GetByteSum(union), GetByteSum(unionResult));
-            unionResult = table.Union(new HashTable.HashTable());
+            unionResult = table.Union(new AlgorithmsDataStructures.PowerSet());
             Assert.AreEqual(GetByteSum(table.Array), GetByteSum(unionResult));
 
             var difference = new string[] { "a", "c", "e"};
@@ -57,9 +57,9 @@ namespace UnitTestProject1
             return result;
         }
 
-        public HashTable.HashTable GenerateTable()
+        public AlgorithmsDataStructures.PowerSet GenerateTable()
         {
-            var table = new HashTable.HashTable();
+            var table = new AlgorithmsDataStructures.PowerSet();
             table.Put("a");
             table.Put("b");
             table.Put("c");
@@ -68,22 +68,22 @@ namespace UnitTestProject1
             return table;
         }
 
-        public HashTable.HashTable[] GenerateTestTable()
+        public AlgorithmsDataStructures.PowerSet[] GenerateTestTable()
         {
-            var tableArray = new HashTable.HashTable[4];
+            var tableArray = new AlgorithmsDataStructures.PowerSet[4];
 
-            tableArray[0] = new HashTable.HashTable();
+            tableArray[0] = new AlgorithmsDataStructures.PowerSet();
             tableArray[0].Put("f");
             tableArray[0].Put("b");
             tableArray[0].Put("g");
             tableArray[0].Put("d");
 
-            tableArray[1] = new HashTable.HashTable();
+            tableArray[1] = new AlgorithmsDataStructures.PowerSet();
             tableArray[1].Put("b");
             tableArray[1].Put("c");
             tableArray[1].Put("d");
 
-            tableArray[2] = new HashTable.HashTable();
+            tableArray[2] = new AlgorithmsDataStructures.PowerSet();
             tableArray[2].Put("a");
             tableArray[2].Put("b");
             tableArray[2].Put("c");
@@ -92,7 +92,7 @@ namespace UnitTestProject1
             tableArray[2].Put("f");
             tableArray[2].Put("g");
 
-            tableArray[3] = new HashTable.HashTable();
+            tableArray[3] = new AlgorithmsDataStructures.PowerSet();
             tableArray[3].Put("x");
             tableArray[3].Put("y");
             tableArray[3].Put("z");
