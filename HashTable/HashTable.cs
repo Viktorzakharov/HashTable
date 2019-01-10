@@ -3,99 +3,101 @@ using System.Collections.Generic;
 
 namespace AlgorithmsDataStructures
 {
-    public class PowerSet
+    public class PowerSet<T>
     {
-        public readonly int Size;
+        public int Size;
         private int Step;
-        public string[] Array;
+        public T[] Slots;
 
-        public PowerSet()
+        public PowerSet(int size)
         {
-            Size = 17;
+            Size = size;
             Step = 3;
-            Array = new string[Size];
+            if (size < 4) Step = 1;
+            Slots = new T[Size];
         }
 
         public int HashFun(string value)
         {
             var result = 0;
             byte[] text = Encoding.UTF8.GetBytes(value);
-            foreach(var e in text)
+            foreach (var e in text)
                 result += e;
-            return result % 17;
+            return result % Size;
         }
 
-        public int[] SeekSlot(string value)
+        public int SeekSlot(T value)
         {
-            var slot = HashFun(value);
+            var slot = HashFun(value.ToString());
             for (int i = 0; i < Size; i++)
             {
-                if (Array[slot % Size] == value) return new int[] { 1, slot % Size };
-                if (Array[slot % Size] == null) return new int[] { -1, slot % Size };
+                if (Equals(Slots[slot % Size], value)) return slot % Size;
+                if (Equals(Slots[slot % Size], default(T))) return slot % Size;
                 slot += Step;
             }
-            return new int[] { 0, -1 };
+            return -1;
         }
 
-        public bool Put(string value)
+        public void Put(T value)
         {
             var slot = SeekSlot(value);
-            if (slot[0] >= 0) return false;
-            Array[slot[1]] = value;
-            return true;
+            if (slot == -1 || Equals(Slots[slot], value)) return;
+            Slots[slot] = value;
         }
 
-        public bool Find(string value)
+        public bool Get(T value)
         {
             var slot = SeekSlot(value);
-            if (slot[0] <= 0) return false;
-            return true;
+            if (slot != -1 && Equals(Slots[slot], value)) return true;
+            return false;
         }
 
-        public bool Remove(string value)
+        public bool Remove(T value)
         {
             var slot = SeekSlot(value);
-            if (slot[0] <= 0) return false;
-            Array[slot[1]] = null;
+            if (slot == -1 || Equals(Slots[slot], default(T))) return false;
+            Slots[slot] = default(T);
             return true;
         }
 
-        public string[] Intersection(PowerSet getSet)
+        public PowerSet<T> Intersection(PowerSet<T> set2)
         {
-            var result = new List<string>();
-            foreach (var e in Array)
-                if (e != null)
-                    if (getSet.Find(e)) result.Add(e);
-            return result.ToArray();
+            var result = new List<T>();
+            foreach (var e in Slots)
+                if (!Equals(e, default(T)) && set2.Get(e)) result.Add(e);
+            return ListToPowerSet(result);
         }
 
-        public string[] Union(PowerSet getSet)
+        public PowerSet<T> Union(PowerSet<T> set2)
         {
-            var result = new List<string>();
-            foreach (var e in getSet.Array)
-                if (e != null)
-                    result.Add(e);
-            foreach (var e in Array)
-                if (e != null)
-                    if (!getSet.Find(e)) result.Add(e);
-            return result.ToArray();
+            var result = new List<T>();
+            foreach (var e in set2.Slots)
+                if (!Equals(e, default(T))) result.Add(e);
+            foreach (var e in Slots)
+                if (!Equals(e, default(T)) && !set2.Get(e)) result.Add(e);
+            return ListToPowerSet(result);
         }
 
-        public string[] Difference(PowerSet getSet)
+        public PowerSet<T> Difference(PowerSet<T> set2)
         {
-            var result = new List<string>();
-            foreach (var e in Array)
-                if (e != null)
-                    if (!getSet.Find(e)) result.Add(e);
-            return result.ToArray();
+            var result = new List<T>();
+            foreach (var e in Slots)
+                if (!Equals(e, default(T)) && !set2.Get(e)) result.Add(e);
+            return ListToPowerSet(result);
         }
 
-        public bool Issubset(PowerSet getSet)
+        public bool IsSubset(PowerSet<T> set2)
         {
-            foreach (var e in getSet.Array)
-                if (e != null)
-                    if (!Find(e)) return false;
+            foreach (var e in set2.Slots)
+                if (!Equals(e, default(T)) && !Get(e)) return false;
             return true;
+        }
+
+        PowerSet<T> ListToPowerSet(List<T> list)
+        {
+            var set = new PowerSet<T>(list.Count);
+            foreach (var e in list) set.Put(e);
+            return set;
         }
     }
 }

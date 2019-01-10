@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Text;
 using AlgorithmsDataStructures;
+using System.Text;
 
-namespace UnitTestProject1
+namespace UnitTestProject2
 {
     [TestClass]
     public class UnitTest1
@@ -52,7 +51,7 @@ namespace UnitTestProject1
             var union = GetByteSum(new string[] { "f", "b", "g", "d", "a", "c", "e" });
             var unionResult = GetByteSum(table.Union(testTables[0]).Slots);
             Assert.AreEqual(union, unionResult);
-            Assert.AreEqual(GetByteSum(table.Slots), table.Union(new PowerSet<string>(0)));
+            Assert.AreEqual(GetByteSum(table.Slots), GetByteSum(table.Union(new PowerSet<string>(17)).Slots));
         }
 
         [TestMethod]
@@ -98,7 +97,7 @@ namespace UnitTestProject1
 
         public static PowerSet<string>[] GenerateTestTables(int size)
         {
-            var tableArray = new PowerSet<string>[5];
+            var tableArray = new PowerSet<string>[4];
 
             tableArray[0] = new PowerSet<string>(size);
             tableArray[0].Put("f");
