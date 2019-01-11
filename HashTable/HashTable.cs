@@ -27,34 +27,34 @@ namespace AlgorithmsDataStructures
             return Set.Remove(value);
         }
 
-        public PowerSet<T> Intersection(PowerSet<T> intersectionSet)
+        public PowerSet<T> Intersection(PowerSet<T> set2)
         {
             var result = new PowerSet<T>();
-            foreach (var e in intersectionSet.Set) if (Get(e)) result.Put(e);
+            foreach (var e in set2.Set) if (Get(e)) result.Put(e);
             result.Set.TrimExcess();
             return result;
         }
 
-        public PowerSet<T> Union(PowerSet<T> unionSet)
+        public PowerSet<T> Union(PowerSet<T> set2)
         {
             var result = new PowerSet<T>();
             foreach (var e in Set) result.Put(e);
-            foreach (var e in unionSet.Set) if (!Get(e)) result.Put(e);
+            foreach (var e in set2.Set) if (!Get(e)) result.Put(e);
             result.Set.TrimExcess();
             return result;
         }
 
-        public PowerSet<T> Difference(PowerSet<T> differenceSet)
+        public PowerSet<T> Difference(PowerSet<T> set2)
         {
             var result = new PowerSet<T>();
-            foreach (var e in Set) if (!differenceSet.Get(e)) result.Put(e);
+            foreach (var e in Set) if (!set2.Get(e)) result.Put(e);
             result.Set.TrimExcess();
             return result;
         }
 
-        public bool IsSubset(PowerSet<T> subSet)
+        public bool IsSubset(PowerSet<T> set2)
         {
-            foreach (var e in subSet.Set) if (!Get(e)) return false;
+            foreach (var e in set2.Set) if (!Get(e)) return false;
             return true;
         }
     }
