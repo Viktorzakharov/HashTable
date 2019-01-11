@@ -6,12 +6,13 @@ namespace AlgorithmsDataStructures
     {
         static void Main()
         {
-            var table = new PowerSet<string>(17);            
+            var table = new PowerSet<string>();
             table.Put("a");
             table.Put("b");
             table.Put("c");
+            table.Put("a");
 
-            var checkTable = new PowerSet<string>(17);
+            var checkTable = new PowerSet<string>();
             checkTable.Put("c");
             checkTable.Put("d");
             checkTable.Put("e");
@@ -25,7 +26,7 @@ namespace AlgorithmsDataStructures
 
         public static void Write(PowerSet<string> table)
         {
-            foreach (var e in table.Slots)
+            foreach (var e in table.Set)
                 Console.Write(e + " ");
             Console.WriteLine();
         }
