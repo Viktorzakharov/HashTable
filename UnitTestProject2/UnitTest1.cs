@@ -15,14 +15,17 @@ namespace UnitTestProject2
         public void TestPut()
         {
             var value = "f";
+            var startCount = table.Size();
             Assert.IsFalse(table.Get(value));
             table.Put(value);
             Assert.IsTrue(table.Get(value));
+            Assert.AreEqual(startCount + 1, table.Size());
 
             table.Put(value);
             var valueCount = 0;
             foreach (var e in table.Set) if (e == value) valueCount++;
             Assert.AreEqual(1, valueCount);
+            Assert.AreEqual(startCount + 1, table.Size());
         }
 
         [TestMethod]

@@ -12,6 +12,11 @@ namespace AlgorithmsDataStructures
             Set = new HashSet<T>();
         }
 
+        public int Size()
+        {
+            return Set.Count;
+        }
+
         public void Put(T value)
         {
             Set.Add(value);
