@@ -1,100 +1,88 @@
 ﻿using System.Text;
+using System.Collections.Generic;
 
-namespace HashTable
+namespace AlgorithmsDataStructures
 {
-    public class Cache
+    public class NativeCache<T>
     {
-        public readonly int Size;
-        public readonly int Step;
-        public object[] KeyArray;
-        public object[] ValueArray;
-        public int[] Appeals;
-        public Database Data;
-        public readonly int AppealValueStart;
-        public readonly int AppealValueGet;
+        public int size;
+        private int step;
+        public string[] slots;
+        public T[] values;
+        public int[] hits;
+        public readonly int hitsStart;
+        public readonly int hitsGet;
+        public Dictionary<string, T> data;
 
-
-        public Cache()
+        public NativeCache(int sz)
         {
-            Size = 17;
-            Step = 3;
-            KeyArray = new object[Size];
-            ValueArray = new object[Size];
-            Appeals = new int[Size];
-            Data = new Database();
-            Data.Create();
-            AppealValueStart = 8;
-            AppealValueGet = 18;
+            size = sz;
+            step = 3;
+            if (sz < 4) step = 1;
+            slots = new string[size];
+            values = new T[size];
+            hits = new int[size];
+            hitsStart = 8;
+            hitsGet = 18;
         }
 
-        public int HashFun(object value)
+        public int HashFun(string key)
         {
             var result = 0;
-            byte[] text = Encoding.UTF8.GetBytes(value.ToString());
+            byte[] text = Encoding.UTF8.GetBytes(key);
             for (int i = 0; i < text.Length; i++)
                 result += text[i];
-            return result % Size;
+            return result % size;
         }
 
-        public int[] IsKey(object key)
+        public int FindSlot(string key)
         {
             var slot = HashFun(key);
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < size; i++)
             {
-                var item = KeyArray[slot % Size];
-                if (key.Equals(item)) return new int[] { 1, slot % Size };
-                if (item is null) return new int[] { 0, slot % Size };
-                slot += Step;
+                var item = slots[slot % size];
+                if (item == key) return slot % size;
+                if (item == null) return slot % size;
+                slot += step;
             }
-            return new int[] { -1, MinIndex() };
+            return -1;
         }
 
-        public object GetValue(object key)
+        public T Get(string key)
         {
-            var slot = IsKey(key);
-            if (slot[0] == 1)
-            {
-                AppealsManage(slot[1]);
-                return ValueArray[slot[1]];
-            }
-            if (slot[0] == -1)
-            {
-                PutKeyValue(slot[1], key);
-                Appeals[slot[1]] = AppealValueStart;
-                return ValueArray[slot[1]];
-            }
-            PutKeyValue(slot[1], key);
-            Appeals[slot[1]] = AppealValueStart;
-            return ValueArray[slot[1]];
+            if (data.Count == 0) return default(T);
+            var slot = FindSlot(key);
+            if (slot == -1) return Put(MinIndex(), key);
+            if (slots[slot] == null) return Put(slot, key);
+            return HitsManage(slot, false);
         }
 
-        public void AppealsManage(int slot)
+        private T Put(int index, string key)
         {
-            Appeals[slot] += AppealValueGet;
-            for (int i = 0; i < Appeals.Length; i++)
-                if (KeyArray[i] != null)
-                    Appeals[i]--;
+            slots[index] = key;
+            values[index] = data[key];
+            return HitsManage(index, true);
+        }
+
+        private T HitsManage(int slot, bool put)
+        {
+            if (put) hits[slot] = hitsStart;
+            else hits[slot] += hitsGet;
+            for (int i = 0; i < hits.Length; i++) if (slots[i] != null) hits[i]--;
+            return values[slot];
         }
 
         public int MinIndex()
         {
-            var min = Appeals[0];
+            var min = hits[0];
             var minIndex = 0;
-
-            for (int i = 0; i < Appeals.Length; i++)
-                if (min > Appeals[i])
+            for (int i = 0; i < hits.Length; i++)
+                if (min > hits[i])
                 {
-                    min = Appeals[i];
+                    min = hits[i];
                     minIndex = i;
                 }
             return minIndex;
-        }
-
-        public void PutKeyValue(int index, object key)
-        {
-            KeyArray[index] = key;
-            ValueArray[index] = Data.Data[key];
-            AppealsManage(index);
         }
     }
 }
